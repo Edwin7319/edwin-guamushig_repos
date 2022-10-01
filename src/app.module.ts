@@ -29,6 +29,7 @@ import configuration from './config/configuration';
           },
           entities: [__dirname + '/**/*.entity{.ts,.js}'],
           synchronize: true,
+          dropSchema: true,
         };
       },
     }),
