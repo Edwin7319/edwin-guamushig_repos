@@ -1,5 +1,31 @@
 {
   "$schema": "https://json.schemastore.org/nest-cli",
   "collection": "@nestjs/schematics",
-  "sourceRoot": "src"
+  "sourceRoot": "apps/edwin-guamushig_repos/src",
+  "monorepo": true,
+  "root": "apps/edwin-guamushig_repos",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/edwin-guamushig_repos/tsconfig.app.json"
+  },
+  "projects": {
+    "edwin-guamushig_repos": {
+      "type": "application",
+      "root": "apps/edwin-guamushig_repos",
+      "entryFile": "main",
+      "sourceRoot": "apps/edwin-guamushig_repos/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/edwin-guamushig_repos/tsconfig.app.json"
+      }
+    },
+    "mock-service": {
+      "type": "application",
+      "root": "apps/mock-service",
+      "entryFile": "main",
+      "sourceRoot": "apps/mock-service/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/mock-service/tsconfig.app.json"
+      }
+    }
+  }
 }
