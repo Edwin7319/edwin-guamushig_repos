@@ -32,6 +32,7 @@ describe('OrganizationService', () => {
   });
 
   afterEach(() => {
+    jest.clearAllMocks();
     jest.restoreAllMocks();
   });
 
@@ -78,16 +79,13 @@ describe('OrganizationService', () => {
 
       const originalOrganization = await organizationRepository.findOne(ID);
       expect(originalOrganization).toMatchObject({
-        id: 2,
         name: 'Organization 2',
-        status: 1,
       });
 
-      await service.update(ID, {
+      const updatedOrganization = await service.update(ID, {
         name: 'Organization 2 updated',
       });
 
-      const updatedOrganization = await organizationRepository.findOne(ID);
       expect(updatedOrganization).toMatchObject({
         id: 2,
         name: 'Organization 2 updated',
@@ -96,9 +94,11 @@ describe('OrganizationService', () => {
     });
 
     it('should throw an internal exception if there is a problem updating an organization', async () => {
-      jest.spyOn(organizationRepository, 'update').mockImplementation(() => {
-        throw new Error();
-      });
+      jest
+        .spyOn(organizationRepository, 'createQueryBuilder')
+        .mockImplementation(() => {
+          throw new Error();
+        });
 
       await expect(service.update(1, {})).rejects.toThrow(
         InternalServerErrorException,
