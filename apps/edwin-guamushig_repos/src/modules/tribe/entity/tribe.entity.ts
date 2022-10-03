@@ -9,7 +9,7 @@ import {
 
 import { BaseAppEntity } from '../../../base/base-app.entity';
 import { OrganizationEntity } from '../../organization/entity/organization.entity';
-import { RepositoryEntity } from '../../repository/repository.entity';
+import { RepositoryEntity } from '../../repository/entity/repository.entity';
 
 @Entity('tribe')
 export class TribeEntity extends BaseAppEntity {

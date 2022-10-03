@@ -6,10 +6,10 @@ import {
   OneToOne,
   RelationId,
 } from 'typeorm';
-import { TribeEntity } from '../tribe/entity/tribe.entity';
+import { TribeEntity } from '../../tribe/entity/tribe.entity';
 
-import { BaseAppEntity } from '../../base/base-app.entity';
-import { MetricsEntity } from '../metrics/metrics.entity';
+import { BaseAppEntity } from '../../../base/base-app.entity';
+import { MetricsEntity } from '../../metrics/metrics.entity';
 
 export enum RepositoryStateEnum {
   ENABLE = 'E',
@@ -47,6 +47,14 @@ export class RepositoryEntity extends BaseAppEntity {
     nullable: false,
   })
   status: RepositoryStatusEnum;
+
+  @Column({
+    name: 'create_time',
+    type: 'timestamp',
+    nullable: false,
+    default: new Date(),
+  })
+  createTime: Date;
 
   @ManyToOne(() => TribeEntity, (tribe) => tribe.repositories, {
     nullable: false,

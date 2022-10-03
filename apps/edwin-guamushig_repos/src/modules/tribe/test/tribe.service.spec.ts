@@ -78,7 +78,7 @@ describe('TribeService', () => {
   });
 
   describe('when update method is called', () => {
-    it('should update an tribe', async () => {
+    it('should update a tribe', async () => {
       const ID = 2;
 
       const originalTribe = await tribeRepository.findOne(ID);
@@ -97,7 +97,7 @@ describe('TribeService', () => {
       });
     });
 
-    it('should throw an internal exception if there is a problem updating an tribe', async () => {
+    it('should throw an internal exception if there is a problem updating a tribe', async () => {
       jest
         .spyOn(tribeRepository, 'createQueryBuilder')
         .mockImplementation(() => {
@@ -118,7 +118,6 @@ describe('TribeService', () => {
     it('should return an array, in the first position the list of tribes and in the second a counter', async () => {
       const tribes = await service.findAll();
 
-      console.log(JSON.stringify(tribes, null, 2));
       expect(tribes[0]).toMatchObject([
         {
           id: 1,
@@ -179,7 +178,7 @@ describe('TribeService', () => {
   });
 
   describe('when delete method is called', () => {
-    it('should delete an tribe', async () => {
+    it('should delete a tribe', async () => {
       const ID = 1;
 
       const originalTribe = await tribeRepository.findOne(ID);
@@ -196,7 +195,7 @@ describe('TribeService', () => {
       await expect(service.delete(99)).rejects.toThrow(NotFoundException);
     });
 
-    it('should throw an internal exception if there is a problem deleting an tribe', async () => {
+    it('should throw an internal exception if there is a problem deleting a tribe', async () => {
       jest.spyOn(tribeRepository, 'delete').mockImplementation(() => {
         throw new Error();
       });
