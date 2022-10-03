@@ -5,6 +5,10 @@ import * as request from 'supertest';
 import { MetricsController } from '../metrics.controller';
 import { TestUtil } from '../../../utils/test.util';
 import { MetricsService } from '../metrics.service';
+import { MetricsCreateDto } from '../dto/metrics-create.dto';
+import { DATA } from '../fixture/test-data';
+import { MetricsEntity } from '../entity/metrics.entity';
+import { MetricsUpdateDto } from '../dto/metrics-update.dto';
 
 describe('MetricsController', () => {
   let controller: MetricsController;
@@ -20,6 +24,8 @@ describe('MetricsController', () => {
       controllers: [MetricsController],
       exports: [MetricsService],
     }).compile();
+
+    await TestUtil.setup(DATA);
 
     const app = module.createNestApplication();
     app.useGlobalPipes(new ValidationPipe({ transform: true }));
@@ -44,6 +50,37 @@ describe('MetricsController', () => {
   });
 
   describe('when create controller is called', () => {
+    it('should return a new metric', async () => {
+      const metric: MetricsCreateDto = {
+        coverage: 93,
+        hotspot: 2,
+        bugs: 4,
+        codeSmells: 49,
+        vulnerabilities: 87,
+        repository: {
+          id: 1,
+        },
+      };
+
+      const mockCreate = jest
+        .spyOn(metricsService, 'create')
+        .mockImplementation(() =>
+          Promise.resolve({
+            id: 1,
+            ...metric,
+            createdAt: new Date('2021-02-01T00:00:00.000Z'),
+            updatedAt: new Date('2021-02-01T00:00:00.000Z'),
+          } as MetricsEntity),
+        );
+
+      const response = await request(httpServer)
+        .post('/metrics')
+        .send(metric)
+        .expect(201);
+
+      expect(response.body).toMatchObject({ ...metric });
+      expect(mockCreate).toHaveBeenCalledWith({ ...metric });
+    });
     it('should return errors with description of the required fields', async () => {
       const mockCreateService = jest.spyOn(metricsService, 'create');
 
@@ -74,6 +111,35 @@ describe('MetricsController', () => {
   });
 
   describe('when update controller is called', () => {
+    it('should return the metric updated', async () => {
+      const metric: MetricsUpdateDto = {
+        coverage: 22,
+        vulnerabilities: 44,
+      };
+
+      const mockCreate = jest
+        .spyOn(metricsService, 'update')
+        .mockImplementation(() =>
+          Promise.resolve({
+            id: 2,
+            ...metric,
+            createdAt: new Date('2021-02-01T00:00:00.000Z'),
+            updatedAt: new Date('2021-02-01T00:00:00.000Z'),
+          } as MetricsEntity),
+        );
+
+      const response = await request(httpServer)
+        .put('/metrics/1')
+        .send(metric)
+        .expect(200);
+
+      expect(response.body).toMatchObject({
+        id: 2,
+        ...metric,
+      });
+      expect(mockCreate).toHaveBeenCalledWith(1, { ...metric });
+    });
+
     it('should return errors with problem fields', async () => {
       const mockUpdateService = jest.spyOn(metricsService, 'update');
 

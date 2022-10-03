@@ -5,6 +5,9 @@ import * as request from 'supertest';
 import { OrganizationController } from '../organization.controller';
 import { TestUtil } from '../../../utils/test.util';
 import { OrganizationService } from '../organization.service';
+import { OrganizationCreateDto } from '../dto/organization-create.dto';
+import { OrganizationEntity } from '../entity/organization.entity';
+import { OrganizationUpdateDto } from '../dto/organization-update.dto';
 
 describe('OrganizationController', () => {
   let controller: OrganizationController;
@@ -44,6 +47,32 @@ describe('OrganizationController', () => {
   });
 
   describe('when create controller is called', () => {
+    it('should return a new organization', async () => {
+      const testData: OrganizationCreateDto = {
+        name: 'name',
+        status: 22,
+      };
+
+      const mockCreate = jest
+        .spyOn(organizationService, 'create')
+        .mockImplementation(() =>
+          Promise.resolve({
+            id: 1,
+            ...testData,
+            createdAt: new Date('2021-02-01T00:00:00.000Z'),
+            updatedAt: new Date('2021-02-01T00:00:00.000Z'),
+          } as OrganizationEntity),
+        );
+
+      const response = await request(httpServer)
+        .post('/organization')
+        .send(testData)
+        .expect(201);
+
+      expect(response.body).toMatchObject({ ...testData });
+      expect(mockCreate).toHaveBeenCalledWith({ ...testData });
+    });
+
     it('should return errors with description of the required fields', async () => {
       const mockCreateService = jest.spyOn(organizationService, 'create');
 
@@ -67,6 +96,34 @@ describe('OrganizationController', () => {
   });
 
   describe('when update controller is called', () => {
+    it('should return the organization updated', async () => {
+      const testData: OrganizationUpdateDto = {
+        name: 'updated',
+      };
+
+      const mockCreate = jest
+        .spyOn(organizationService, 'update')
+        .mockImplementation(() =>
+          Promise.resolve({
+            id: 2,
+            ...testData,
+            createdAt: new Date('2021-02-01T00:00:00.000Z'),
+            updatedAt: new Date('2021-02-01T00:00:00.000Z'),
+          } as OrganizationEntity),
+        );
+
+      const response = await request(httpServer)
+        .put('/organization/1')
+        .send(testData)
+        .expect(200);
+
+      expect(response.body).toMatchObject({
+        id: 2,
+        ...testData,
+      });
+      expect(mockCreate).toHaveBeenCalledWith(1, { ...testData });
+    });
+
     it('should return errors with problem fields', async () => {
       const mockUpdateService = jest.spyOn(organizationService, 'update');
 

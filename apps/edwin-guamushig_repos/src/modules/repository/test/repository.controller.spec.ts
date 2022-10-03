@@ -5,6 +5,13 @@ import * as request from 'supertest';
 import { RepositoryController } from '../repository.controller';
 import { RepositoryService } from '../repository.service';
 import { TestUtil } from '../../../utils/test.util';
+import { RepositoryCreateDto } from '../dto/repository-create.dto';
+import {
+  RepositoryStateEnum,
+  RepositoryStatusEnum,
+} from '../enum/repository.enum';
+import { RepositoryEntity } from '../entity/repository.entity';
+import { RepositoryUpdateDto } from '../dto/repository-update.dto';
 
 describe('RepositoryController', () => {
   let controller: RepositoryController;
@@ -44,6 +51,36 @@ describe('RepositoryController', () => {
   });
 
   describe('when create controller is called', () => {
+    it('should return a new repository', async () => {
+      const testData: RepositoryCreateDto = {
+        name: 'name',
+        status: RepositoryStatusEnum.INACTIVE,
+        tribe: {
+          id: 1,
+        },
+        state: RepositoryStateEnum.ENABLE,
+      };
+
+      const mockCreate = jest
+        .spyOn(repoService, 'create')
+        .mockImplementation(() =>
+          Promise.resolve({
+            id: 1,
+            ...testData,
+            createdAt: new Date('2021-02-01T00:00:00.000Z'),
+            updatedAt: new Date('2021-02-01T00:00:00.000Z'),
+          } as RepositoryEntity),
+        );
+
+      const response = await request(httpServer)
+        .post('/repository')
+        .send(testData)
+        .expect(201);
+
+      expect(response.body).toMatchObject({ ...testData });
+      expect(mockCreate).toHaveBeenCalledWith({ ...testData });
+    });
+
     it('should return errors with description of the required fields', async () => {
       const mockCreateService = jest.spyOn(repoService, 'create');
 
@@ -70,6 +107,34 @@ describe('RepositoryController', () => {
   });
 
   describe('when update controller is called', () => {
+    it('should return the repository updated', async () => {
+      const testData: RepositoryUpdateDto = {
+        status: RepositoryStatusEnum.ACTIVE,
+      };
+
+      const mockCreate = jest
+        .spyOn(repoService, 'update')
+        .mockImplementation(() =>
+          Promise.resolve({
+            id: 2,
+            ...testData,
+            createdAt: new Date('2021-02-01T00:00:00.000Z'),
+            updatedAt: new Date('2021-02-01T00:00:00.000Z'),
+          } as RepositoryEntity),
+        );
+
+      const response = await request(httpServer)
+        .put('/repository/1')
+        .send(testData)
+        .expect(200);
+
+      expect(response.body).toMatchObject({
+        id: 2,
+        ...testData,
+      });
+      expect(mockCreate).toHaveBeenCalledWith(1, { ...testData });
+    });
+
     it('should return errors with problem fields', async () => {
       const mockUpdateService = jest.spyOn(repoService, 'update');
 

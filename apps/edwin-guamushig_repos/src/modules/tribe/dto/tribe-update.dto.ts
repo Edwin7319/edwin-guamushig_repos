@@ -4,12 +4,12 @@ import { OrganizationEntity } from '../../organization/entity/organization.entit
 export class TribeUpdateDto {
   @IsOptional()
   @IsString()
-  name: string;
+  name?: string;
 
   @IsOptional()
   @IsInt()
-  status: number;
+  status?: number;
 
   @IsOptional()
-  organization: Partial<OrganizationEntity>;
+  organization?: Partial<OrganizationEntity>;
 }

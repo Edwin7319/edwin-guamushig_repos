@@ -85,7 +85,25 @@
       ".module.ts",
       "main.ts",
       ".entity.ts",
-      "app.service.ts"
-    ]
+      "app.service.ts",
+      "test.util.ts",
+      "-data.ts",
+      "app.service.ts",
+      "entities.ts",
+      "modules.ts",
+      "mock-service",
+      "app.e2e-spec.ts",
+      "base",
+      "config"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 98,
+        "functions": 98,
+        "lines": 98,
+        "statements": 98
+      }
+    }
+
   }
 }
