@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ValidationPipe } from '@nestjs/common';
+import { HttpStatus, ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 import { ConfigService } from '@nestjs/config';
 
@@ -205,6 +205,23 @@ describe('MetricsController', () => {
             state: 'Habilitado',
           },
         ],
+      });
+      expect(mockService).toHaveBeenCalledWith(3);
+    });
+  });
+  describe('when generateCsvReport controller is called', () => {
+    it('should return return default response', async () => {
+      const mockService = jest
+        .spyOn(metricsService, 'generateCsvReport')
+        .mockImplementation(jest.fn());
+
+      const response = await request(httpServer)
+        .get('/metrics/csv-report/3')
+        .expect(201);
+
+      expect(response.body).toMatchObject({
+        message: 'Reporte generado correctamente',
+        status: HttpStatus.CREATED,
       });
       expect(mockService).toHaveBeenCalledWith(3);
     });

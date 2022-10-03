@@ -2,6 +2,8 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
   ParseIntPipe,
   Post,
@@ -42,5 +44,17 @@ export class MetricsController extends BaseAppController<
     @Param('id', ParseIntPipe) id: number,
   ): Promise<RepositoryMetricsResponseDto> {
     return this._metricsService.getRepositoryMetrics(id);
+  }
+
+  @Get('csv-report/:id')
+  @HttpCode(201)
+  async generateCsvReport(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<{ message: string; status: number }> {
+    await this._metricsService.generateCsvReport(id);
+    return {
+      message: 'Reporte generado correctamente',
+      status: HttpStatus.CREATED,
+    };
   }
 }

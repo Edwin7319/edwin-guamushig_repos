@@ -5,6 +5,8 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import * as converter from 'json-2-csv';
+import * as fs from 'fs';
 
 import { BaseAppService } from '../../base/base-app.service';
 import { MetricsEntity } from './entity/metrics.entity';
@@ -64,5 +66,20 @@ export class MetricsService extends BaseAppService<
       throw new NotFoundException('La tribu no se encuentra registrada');
     }
     return true;
+  }
+
+  async generateCsvReport(tribeId: number): Promise<boolean> {
+    const metrics = await this.getRepositoryMetrics(tribeId);
+
+    return new Promise((resolve) => {
+      converter.json2csv(metrics?.repositories, (err, csv) => {
+        if (err) {
+          throw new InternalServerErrorException(`MetricsService: ${err}`);
+        }
+
+        fs.writeFileSync('metrics-report.csv', csv);
+        resolve(true);
+      });
+    });
   }
 }
