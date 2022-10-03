@@ -89,6 +89,7 @@
       ".entity.ts",
       "app.service.ts",
       "test.util.ts",
+      "util.ts",
       "-data.ts",
       "app.service.ts",
       "entities.ts",
