@@ -25,13 +25,22 @@ export class BaseAppService<Entity, CreateDto> {
   async update(
     id: number,
     updateData: QueryDeepPartialEntity<Entity>,
-  ): Promise<void> {
+  ): Promise<Entity> {
     const data = await this._repository.findOne(id);
     if (!data) {
       throw new NotFoundException(`Registry with id ${id} not found`);
     }
     try {
-      await this._repository.update(id, { ...updateData });
+      const updated = await this._repository
+        .createQueryBuilder()
+        .update({ ...updateData })
+        .where({
+          id,
+        })
+        .returning('*')
+        .execute();
+
+      return updated.raw[0];
     } catch (e) {
       throw new InternalServerErrorException('Error updating');
     }

@@ -30,7 +30,7 @@ import { ENTITIES } from './constants/entities';
           },
           entities: [...ENTITIES],
           synchronize: true,
-          dropSchema: true,
+          dropSchema: false,
         };
       },
     }),
