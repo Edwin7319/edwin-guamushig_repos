@@ -4,6 +4,7 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 
 import { MetricsService } from '../metrics.service';
 import { MetricsController } from '../metrics.controller';
@@ -11,23 +12,27 @@ import { TestUtil } from '../../../utils/test.util';
 import { MetricsEntity } from '../entity/metrics.entity';
 import { MetricsCreateDto } from '../dto/metrics-create.dto';
 import { DATA } from '../fixture/test-data';
+import { SimulatedModule } from '../../../gateway/simulated/simulated.module';
+import { SimulatedService } from '../../../gateway/simulated/simulated.service';
 
 describe('MetricsService', () => {
   let service: MetricsService;
+  let simulateService: SimulatedService;
   let module: TestingModule;
   let metricsRepository: Repository<MetricsEntity>;
 
   beforeAll(async () => {
     const typeOrmModule = await TestUtil.testingTypeOrmModuleImports();
     module = await Test.createTestingModule({
-      imports: [...typeOrmModule],
+      imports: [...typeOrmModule, SimulatedModule],
       controllers: [MetricsController],
-      providers: [MetricsService],
+      providers: [MetricsService, ConfigService],
       exports: [MetricsService],
     }).compile();
 
     await TestUtil.setup(DATA);
     service = module.get<MetricsService>(MetricsService);
+    simulateService = module.get<SimulatedService>(SimulatedService);
     metricsRepository = getRepository(MetricsEntity);
   });
 
@@ -130,7 +135,7 @@ describe('MetricsService', () => {
 
       expect(repositories[0]).toMatchObject([
         {
-          id: 3,
+          id: 4,
           coverage: 44.33,
           bugs: 3,
           vulnerabilities: 1,
@@ -148,6 +153,15 @@ describe('MetricsService', () => {
           repositoryId: 2,
         },
         {
+          id: 3,
+          coverage: 88.88,
+          bugs: 2,
+          vulnerabilities: 2,
+          hotspot: 9,
+          codeSmells: 2,
+          repositoryId: 3,
+        },
+        {
           id: 1,
           coverage: 33.33,
           bugs: 1,
@@ -157,7 +171,7 @@ describe('MetricsService', () => {
           repositoryId: 1,
         },
       ]);
-      expect(repositories[1]).toBe(3);
+      expect(repositories[1]).toBe(4);
     });
 
     it('should throw an internal exception if there is a problem', async () => {
@@ -224,6 +238,87 @@ describe('MetricsService', () => {
 
       await expect(service.delete(2)).rejects.toThrow(
         InternalServerErrorException,
+      );
+    });
+  });
+
+  describe('when checkIfTribeExists method is called', () => {
+    it('should return true if tribe exists', async () => {
+      expect(await service.checkIfTribeExists(1)).toBe(true);
+    });
+    it('should return an exception if not exist', async () => {
+      await expect(service.checkIfTribeExists(22)).rejects.toThrow(
+        new NotFoundException('La tribu no se encuentra registrada'),
+      );
+    });
+  });
+
+  describe('when getRepositoryMetrics method is called', () => {
+    it('should return an array with the metrics of the repository', async () => {
+      jest.spyOn(simulateService, 'getRepositories').mockImplementation(() =>
+        Promise.resolve({
+          repositories: [
+            {
+              id: 1,
+              state: 604,
+            },
+            {
+              id: 2,
+              state: 605,
+            },
+            {
+              id: 3,
+              state: 606,
+            },
+          ],
+        }),
+      );
+
+      const metrics = await service.getRepositoryMetrics(3);
+
+      expect(metrics).toMatchObject({
+        repositories: [
+          {
+            id: '3',
+            name: 'Repository 33',
+            tribe: 'Tribe 3',
+            organization: 'Organization 2',
+            coverage: '88.88%',
+            codeSmells: 2,
+            bugs: 2,
+            vulnerabilities: 2,
+            hotspots: 9,
+            verificationState: 'Aprobado',
+            state: 'Habilitado',
+          },
+        ],
+      });
+    });
+
+    it('should return an exception if there is no repository with more than 75% coverage', async () => {
+      jest.spyOn(simulateService, 'getRepositories').mockImplementation(() =>
+        Promise.resolve({
+          repositories: [
+            {
+              id: 1,
+              state: 604,
+            },
+            {
+              id: 2,
+              state: 605,
+            },
+            {
+              id: 3,
+              state: 606,
+            },
+          ],
+        }),
+      );
+
+      await expect(service.getRepositoryMetrics(1)).rejects.toThrow(
+        new NotFoundException(
+          'La tribu no tiene repositorios que cumplan con la cobertura necesaria',
+        ),
       );
     });
   });

@@ -1,4 +1,4 @@
-class RepositoryDto {
+export class RepositoryDto {
   id: number;
   state: number;
 }

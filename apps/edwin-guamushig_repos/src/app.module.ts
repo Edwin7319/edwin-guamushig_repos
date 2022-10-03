@@ -34,9 +34,9 @@ import { AddTestData1664824332308 } from './migrations/1664824332308-AddTestData
           cli: {
             migrationsDir: './migrations',
           },
-          migrationsRun: true,
+          migrationsRun: false,
           synchronize: true,
-          dropSchema: true,
+          dropSchema: false,
         };
       },
     }),
