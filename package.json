@@ -79,6 +79,13 @@
     "testEnvironment": "node",
     "roots": [
       "<rootDir>/apps/"
+    ],
+    "coveragePathIgnorePatterns": [
+      ".dto.ts",
+      ".module.ts",
+      "main.ts",
+      ".entity.ts",
+      "app.service.ts"
     ]
   }
 }
