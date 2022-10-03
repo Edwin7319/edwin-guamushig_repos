@@ -4,24 +4,24 @@ import { RepositoryEntity } from '../../repository/entity/repository.entity';
 export class MetricsUpdateDto {
   @IsOptional()
   @IsNumber()
-  coverage: number;
+  coverage?: number;
 
   @IsOptional()
   @IsInt()
-  bugs: number;
+  bugs?: number;
 
   @IsOptional()
   @IsInt()
-  vulnerabilities: number;
+  vulnerabilities?: number;
 
   @IsOptional()
   @IsInt()
-  hotspot: number;
+  hotspot?: number;
 
   @IsOptional()
   @IsInt()
-  codeSmells: number;
+  codeSmells?: number;
 
   @IsOptional()
-  repository: Partial<RepositoryEntity>;
+  repository?: Partial<RepositoryEntity>;
 }

@@ -98,11 +98,9 @@ describe('TribeService', () => {
     });
 
     it('should throw an internal exception if there is a problem updating a tribe', async () => {
-      jest
-        .spyOn(tribeRepository, 'createQueryBuilder')
-        .mockImplementation(() => {
-          throw new Error();
-        });
+      jest.spyOn(tribeRepository, 'save').mockImplementation(() => {
+        throw new Error();
+      });
 
       await expect(service.update(1, {})).rejects.toThrow(
         InternalServerErrorException,

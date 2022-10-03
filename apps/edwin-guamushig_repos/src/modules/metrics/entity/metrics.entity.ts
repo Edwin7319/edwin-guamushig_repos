@@ -46,5 +46,5 @@ export class MetricsEntity extends BaseAppEntity {
   @JoinColumn({ name: 'id_repository' })
   repository: RepositoryEntity;
   @RelationId((metrics: MetricsEntity) => metrics.repository)
-  idRepository: number;
+  repositoryId: number;
 }

@@ -11,7 +11,7 @@ import { TestUtil } from '../../../utils/test.util';
 import { RepositoryEntity } from '../entity/repository.entity';
 
 import { RepositoryCreateDto } from '../dto/repository-create.dto';
-import { DATA } from '../fixtures/test-data';
+import { DATA } from '../fixture/test-data';
 import {
   RepositoryStateEnum,
   RepositoryStatusEnum,
@@ -108,11 +108,9 @@ describe('RepositoryService', () => {
     });
 
     it('should throw an internal exception if there is a problem updating a repository', async () => {
-      jest
-        .spyOn(repoRepository, 'createQueryBuilder')
-        .mockImplementation(() => {
-          throw new Error();
-        });
+      jest.spyOn(repoRepository, 'save').mockImplementation(() => {
+        throw new Error();
+      });
 
       await expect(service.update(1, {})).rejects.toThrow(
         InternalServerErrorException,

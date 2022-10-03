@@ -31,16 +31,10 @@ export class BaseAppService<Entity, CreateDto> {
       throw new NotFoundException(`Registry with id ${id} not found`);
     }
     try {
-      const updated = await this._repository
-        .createQueryBuilder()
-        .update({ ...updateData })
-        .where({
-          id,
-        })
-        .returning('*')
-        .execute();
-
-      return updated.raw[0];
+      return this._repository.save({
+        ...data,
+        ...(updateData as any),
+      });
     } catch (e) {
       throw new InternalServerErrorException('Error updating');
     }
