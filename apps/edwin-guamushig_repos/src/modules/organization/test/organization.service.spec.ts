@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrganizationService } from '../organization.service';
-import { testingTypeOrmModuleImports } from '../../../utils/test.util';
+import { TestUtil } from '../../../utils/test.util';
 import { OrganizationController } from '../organization.controller';
 
 describe('OrganizationService', () => {
@@ -8,7 +8,7 @@ describe('OrganizationService', () => {
   let module: TestingModule;
 
   beforeAll(async () => {
-    const typeOrmModule = await testingTypeOrmModuleImports();
+    const typeOrmModule = await TestUtil.testingTypeOrmModuleImports();
     module = await Test.createTestingModule({
       imports: [...typeOrmModule],
       providers: [OrganizationService],
