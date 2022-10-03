@@ -6,7 +6,7 @@ import {
   OneToOne,
   RelationId,
 } from 'typeorm';
-import { TribeEntity } from '../tribe/tribe.entity';
+import { TribeEntity } from '../tribe/entity/tribe.entity';
 
 import { BaseAppEntity } from '../../base/base-app.entity';
 import { MetricsEntity } from '../metrics/metrics.entity';
