@@ -160,4 +160,53 @@ describe('MetricsController', () => {
       expect(mockUpdateService).not.toHaveBeenCalled();
     });
   });
+
+  describe('when getRepositoryMetrics controller is called', () => {
+    it('should return the metrics of the repository', async () => {
+      const mockService = jest
+        .spyOn(metricsService, 'getRepositoryMetrics')
+        .mockImplementation(() =>
+          Promise.resolve({
+            repositories: [
+              {
+                id: '3',
+                name: 'Repository 33',
+                tribe: 'Tribe 3',
+                organization: 'Organization 2',
+                coverage: '88.88%',
+                codeSmells: 2,
+                bugs: 2,
+                vulnerabilities: 2,
+                hotspots: 9,
+                verificationState: 'Aprobado',
+                state: 'Habilitado',
+              },
+            ],
+          }),
+        );
+
+      const response = await request(httpServer)
+        .get('/metrics/tribe/3')
+        .expect(200);
+
+      expect(response.body).toMatchObject({
+        repositories: [
+          {
+            id: '3',
+            name: 'Repository 33',
+            tribe: 'Tribe 3',
+            organization: 'Organization 2',
+            coverage: '88.88%',
+            codeSmells: 2,
+            bugs: 2,
+            vulnerabilities: 2,
+            hotspots: 9,
+            verificationState: 'Aprobado',
+            state: 'Habilitado',
+          },
+        ],
+      });
+      expect(mockService).toHaveBeenCalledWith(3);
+    });
+  });
 });
