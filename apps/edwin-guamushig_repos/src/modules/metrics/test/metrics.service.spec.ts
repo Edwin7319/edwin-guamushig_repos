@@ -101,8 +101,6 @@ describe('MetricsService', () => {
         hotspot: 1,
       });
 
-      console.log(updatedRepo);
-
       expect(updatedRepo).toMatchObject({
         id: 1,
         coverage: 33.33,
