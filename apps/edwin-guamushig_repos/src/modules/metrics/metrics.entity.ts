@@ -2,7 +2,7 @@ import { Column, Entity, OneToOne } from 'typeorm';
 import { JoinColumn } from 'typeorm/browser';
 
 import { BaseAppEntity } from '../../base/base-app.entity';
-import { RepositoryEntity } from '../repository/repository.entity';
+import { RepositoryEntity } from '../repository/entity/repository.entity';
 
 @Entity('metrics')
 export class MetricsEntity extends BaseAppEntity {

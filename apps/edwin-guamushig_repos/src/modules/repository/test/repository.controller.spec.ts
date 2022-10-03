@@ -2,23 +2,23 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
 
-import { TribeController } from '../tribe.controller';
+import { RepositoryController } from '../repository.controller';
+import { RepositoryService } from '../repository.service';
 import { TestUtil } from '../../../utils/test.util';
-import { TribeService } from '../tribe.service';
 
-describe('TribeController', () => {
-  let controller: TribeController;
+describe('RepositoryController', () => {
+  let controller: RepositoryController;
   let module: TestingModule;
-  let tribeService: TribeService;
+  let repoService: RepositoryService;
   let httpServer;
 
   beforeAll(async () => {
     const typeOrmModule = await TestUtil.testingTypeOrmModuleImports();
     module = await Test.createTestingModule({
       imports: [...typeOrmModule],
-      providers: [TribeService],
-      controllers: [TribeController],
-      exports: [TribeService],
+      providers: [RepositoryService],
+      controllers: [RepositoryController],
+      exports: [RepositoryService],
     }).compile();
 
     const app = module.createNestApplication();
@@ -26,8 +26,8 @@ describe('TribeController', () => {
     await app.init();
     httpServer = app.getHttpServer();
 
-    controller = module.get<TribeController>(TribeController);
-    tribeService = module.get<TribeService>(TribeService);
+    controller = module.get<RepositoryController>(RepositoryController);
+    repoService = module.get<RepositoryService>(RepositoryService);
   });
 
   afterEach(() => {
@@ -45,10 +45,10 @@ describe('TribeController', () => {
 
   describe('when create controller is called', () => {
     it('should return errors with description of the required fields', async () => {
-      const mockCreateService = jest.spyOn(tribeService, 'create');
+      const mockCreateService = jest.spyOn(repoService, 'create');
 
       const response = await request(httpServer)
-        .post('/tribe')
+        .post('/repository')
         .send({})
         .expect(400);
 
@@ -56,9 +56,11 @@ describe('TribeController', () => {
         message: [
           'name must be a string',
           'name should not be empty',
-          'status must be an integer number',
+          'status must be one of the following values: A, I',
           'status should not be empty',
-          'organization should not be empty',
+          'state must be one of the following values: A, E, D',
+          'state should not be empty',
+          'tribe should not be empty',
         ],
         error: 'Bad Request',
       });
@@ -69,10 +71,10 @@ describe('TribeController', () => {
 
   describe('when update controller is called', () => {
     it('should return errors with problem fields', async () => {
-      const mockUpdateService = jest.spyOn(tribeService, 'update');
+      const mockUpdateService = jest.spyOn(repoService, 'update');
 
       const response = await request(httpServer)
-        .put('/tribe/2')
+        .put('/repository/2')
         .send({ name: 222 })
         .expect(400);
 
