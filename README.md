@@ -59,6 +59,11 @@ $ npm run test
 * **GET** Reporte CSV `http://localhost:8080/metrics/csv-report/1`
 
 
+### CRUD
+* Los endpoints disponibles para los métodos CRUD, se pueden listar en:
+```bash
+http://localhost:8080/api/
+```
 
 ### License
 
