@@ -6,7 +6,7 @@ import { RepositoryResponseDto } from './dto/repository-response.dto';
 export class MockServiceController {
   constructor(private readonly mockServiceService: MockServiceService) {}
 
-  @Get()
+  @Get('repositories')
   getRepositoryStatus(): RepositoryResponseDto {
     return this.mockServiceService.getRepositoryStatus();
   }

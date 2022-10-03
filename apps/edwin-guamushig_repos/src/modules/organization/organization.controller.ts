@@ -15,8 +15,9 @@ export class OrganizationController extends BaseAppController<
   }
 
   @Post()
-  async createFake(@Body() data: OrganizationCreateDto) {
-    console.log(data);
+  async create(
+    @Body() data: OrganizationCreateDto,
+  ): Promise<OrganizationEntity> {
     return this._organizationService.create(data);
   }
 }
