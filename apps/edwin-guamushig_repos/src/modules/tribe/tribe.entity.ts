@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 
 import { BaseAppEntity } from '../../base/base-app.entity';
-import { OrganizationEntity } from '../organization/organization.entity';
+import { OrganizationEntity } from '../organization/entity/organization.entity';
 import { RepositoryEntity } from '../repository/repository.entity';
 
 @Entity('tribe')

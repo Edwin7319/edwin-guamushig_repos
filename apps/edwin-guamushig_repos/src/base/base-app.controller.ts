@@ -1,34 +1,12 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  ParseIntPipe,
-  Post,
-  Put,
-} from '@nestjs/common';
+import { Controller, Delete, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { BaseAppService } from './base-app.service';
 
 @Controller()
-export class BaseAppController<Entity, CreateDto, UpdateDto> {
-  protected readonly _service: BaseAppService<Entity>;
+export class BaseAppController<Entity, CreateDto> {
+  protected readonly _service: BaseAppService<Entity, CreateDto>;
 
-  constructor(_service: BaseAppService<Entity>) {
+  constructor(_service: BaseAppService<Entity, CreateDto>) {
     this._service = _service;
-  }
-
-  @Post()
-  async create(@Body() data: CreateDto): Promise<Entity> {
-    return this._service.create(data as any as Entity);
-  }
-
-  @Put(':id')
-  async update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() data: UpdateDto,
-  ): Promise<void> {
-    return this._service.update(id, data as any);
   }
 
   @Get(':id')
