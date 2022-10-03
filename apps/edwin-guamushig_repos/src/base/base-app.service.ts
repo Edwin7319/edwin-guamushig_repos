@@ -26,7 +26,7 @@ export class BaseAppService<Entity, CreateDto> {
     id: number,
     updateData: QueryDeepPartialEntity<Entity>,
   ): Promise<void> {
-    const data = await this._repository.findOneById(id);
+    const data = await this._repository.findOne(id);
     if (!data) {
       throw new NotFoundException(`Registry with id ${id} not found`);
     }
@@ -47,21 +47,21 @@ export class BaseAppService<Entity, CreateDto> {
 
   async findById(id: number): Promise<Entity> {
     try {
-      return this._repository.findOneById(id);
+      return this._repository.findOne(id);
     } catch (e) {
       throw new InternalServerErrorException('Error finding by id');
     }
   }
 
   async delete(id: number): Promise<void> {
-    const registro = await this._repository.findOneById(id);
+    const registro = await this._repository.findOne(id);
 
     if (!registro) {
       throw new NotFoundException(`Registry with id ${id} not found`);
     }
 
     try {
-      await this._repository.remove(registro);
+      await this._repository.delete(id);
     } catch (e) {
       throw new InternalServerErrorException('Error deleting');
     }
