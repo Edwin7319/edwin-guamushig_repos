@@ -1,73 +1,72 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+## EJERCICIO PRÁCTICO BACKEND DEVELOPER
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+### Descripción
+* Reto backend developer, dependencias utilizadas: 
+   * Node v16.15.1
+   * NestJS
+   * TypeORM
+   * CockroachDB
+   * pg-mem (para pruebas unitarias)
+   * Jest (para pruebas unitarias)
+  
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+* Para generar el servicio **MOCK** en una app independiente, se utilizó la estrategia de **MONOREPOS**; el servicio simulado se encuentra dentro del directorio `/apps/mock-service`.
 
-## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+* La migración utilizada para crear datos de prueba, se corre de forma automática al iniciar la aplicación, dicha migración se encuentra en el directorio `/apps/edwin-guamushig_repos/migrations`.
 
-## Installation
 
+### Levantar el proyecto
+* Para levantar el proyecto es necesario las variables de entorno que se encuentran descritas en el archivo `.env.example`.
+
+
+* Clonar el repositorio
+```bash
+$ git clone https://github.com/Edwin7319/edwin-guamushig_repos.git
+``` 
+```bash
+$ cd edwin-guamushig_repos
+```
+* En caso de tener instalado NVM
+```bash
+$ nvm use
+``` 
+
+* Instalar dependencias
 ```bash
 $ npm install
 ```
 
-## Running the app
-
-```bash
-# development
-$ npm run start
-
-# watch mode
+* Levantar proyecto principal
+```bash 
 $ npm run start:dev
-
-# production mode
-$ npm run start:prod
 ```
 
-## Test
-
+* Levantar proyecto simulado
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+$ npm run start:dev:mock
 ```
 
-## Support
+* Correr pruebas unitarias
+```bash
+$ npm run test
+```
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Endpoints
 
-## Stay in touch
+* **GET** Servicio simulador `http://localhost:3000/repositories`
+* **GET** Métricas de un repositorio `http://localhost:8080/metrics/tribe/1`
+* **GET** Reporte CSV `http://localhost:8080/metrics/csv-report/1`
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
 
-## License
 
-Nest is [MIT licensed](LICENSE).
+### License
+
+**All rights reserved by Guamushig Edwin**
+
+### Developed by
+**Guamushig Edwin**
+
+
+
+[![Build Status](https://icons.iconarchive.com/icons/papirus-team/papirus-apps/128/github-icon.png)](https://github.com/RLazamh)
