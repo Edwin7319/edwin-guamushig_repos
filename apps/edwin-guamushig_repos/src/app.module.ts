@@ -6,6 +6,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MODULES_APP } from './constants/modules';
 import configuration from './config/configuration';
+import { ENTITIES } from './constants/entities';
 
 @Module({
   imports: [
@@ -27,7 +28,7 @@ import configuration from './config/configuration';
           extra: {
             options: routingId,
           },
-          entities: [__dirname + '/**/*.entity{.ts,.js}'],
+          entities: [...ENTITIES],
           synchronize: true,
           dropSchema: true,
         };

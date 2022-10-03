@@ -1,7 +1,7 @@
 import { Column, Entity, OneToMany } from 'typeorm';
 
-import { BaseAppEntity } from '../../base/base-app.entity';
-import { TribeEntity } from '../tribe/tribe.entity';
+import { BaseAppEntity } from '../../../base/base-app.entity';
+import { TribeEntity } from '../../tribe/tribe.entity';
 
 @Entity('organization')
 export class OrganizationEntity extends BaseAppEntity {
