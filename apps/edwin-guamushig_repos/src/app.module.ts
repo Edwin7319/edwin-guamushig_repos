@@ -7,6 +7,7 @@ import { AppService } from './app.service';
 import { MODULES_APP } from './constants/modules';
 import configuration from './config/configuration';
 import { ENTITIES } from './constants/entities';
+import { AddTestData1664824332308 } from './migrations/1664824332308-AddTestData';
 
 @Module({
   imports: [
@@ -29,8 +30,13 @@ import { ENTITIES } from './constants/entities';
             options: routingId,
           },
           entities: [...ENTITIES],
+          migrations: [AddTestData1664824332308],
+          cli: {
+            migrationsDir: './migrations',
+          },
+          migrationsRun: true,
           synchronize: true,
-          dropSchema: false,
+          dropSchema: true,
         };
       },
     }),
