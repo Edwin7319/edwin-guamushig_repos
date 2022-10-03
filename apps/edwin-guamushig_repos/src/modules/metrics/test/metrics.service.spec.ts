@@ -5,35 +5,30 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 
-import { RepositoryService } from '../repository.service';
-import { RepositoryController } from '../repository.controller';
+import { MetricsService } from '../metrics.service';
+import { MetricsController } from '../metrics.controller';
 import { TestUtil } from '../../../utils/test.util';
-import { RepositoryEntity } from '../entity/repository.entity';
-
-import { RepositoryCreateDto } from '../dto/repository-create.dto';
+import { MetricsEntity } from '../entity/metrics.entity';
+import { MetricsCreateDto } from '../dto/metrics-create.dto';
 import { DATA } from '../fixture/test-data';
-import {
-  RepositoryStateEnum,
-  RepositoryStatusEnum,
-} from '../enum/repository.enum';
 
-describe('RepositoryService', () => {
-  let service: RepositoryService;
+describe('MetricsService', () => {
+  let service: MetricsService;
   let module: TestingModule;
-  let repoRepository: Repository<RepositoryEntity>;
+  let metricsRepository: Repository<MetricsEntity>;
 
   beforeAll(async () => {
     const typeOrmModule = await TestUtil.testingTypeOrmModuleImports();
     module = await Test.createTestingModule({
       imports: [...typeOrmModule],
-      providers: [RepositoryService],
-      controllers: [RepositoryController],
-      exports: [RepositoryService],
+      controllers: [MetricsController],
+      providers: [MetricsService],
+      exports: [MetricsService],
     }).compile();
 
     await TestUtil.setup(DATA);
-    service = module.get<RepositoryService>(RepositoryService);
-    repoRepository = getRepository(RepositoryEntity);
+    service = module.get<MetricsService>(MetricsService);
+    metricsRepository = getRepository(MetricsEntity);
   });
 
   afterEach(() => {
@@ -50,14 +45,16 @@ describe('RepositoryService', () => {
   });
 
   describe('when create method is called', () => {
-    it('should create a new repository', async () => {
-      const newRepository = {
-        name: 'new repo',
-        state: RepositoryStateEnum.ENABLE,
-        status: RepositoryStatusEnum.ACTIVE,
-        tribe: {
+    it('should create a new metric', async () => {
+      const newRepository: MetricsCreateDto = {
+        repository: {
           id: 1,
         },
+        bugs: 3,
+        codeSmells: 2,
+        vulnerabilities: 1,
+        coverage: 44.33,
+        hotspot: 1,
       };
       const repository = await service.create({
         ...newRepository,
@@ -65,20 +62,23 @@ describe('RepositoryService', () => {
 
       expect(repository).toMatchObject({
         ...newRepository,
-        tribeId: 1,
+        repositoryId: 1,
       });
     });
 
-    it('should throw an error exception if there is a problem creating a new repository', async () => {
-      jest.spyOn(repoRepository, 'save').mockImplementation(() => {
+    it('should throw an error exception if there is a problem creating a new metric', async () => {
+      jest.spyOn(metricsRepository, 'save').mockImplementation(() => {
         throw new Error();
       });
 
       await expect(
         service.create({
-          name: 'test',
-          status: RepositoryStatusEnum.ACTIVE,
-        } as RepositoryCreateDto),
+          bugs: 3,
+          codeSmells: 2,
+          vulnerabilities: 1,
+          coverage: 44.33,
+          hotspot: 1,
+        } as MetricsCreateDto),
       ).rejects.toThrow(InternalServerErrorException);
     });
   });
@@ -87,28 +87,32 @@ describe('RepositoryService', () => {
     it('should update an tribe', async () => {
       const ID = 1;
 
-      const originalRepo = await repoRepository.findOne(ID);
+      const originalRepo = await metricsRepository.findOne(ID);
       expect(originalRepo).toMatchObject({
-        name: 'Repository 1',
-        state: RepositoryStateEnum.ENABLE,
-        status: RepositoryStatusEnum.ACTIVE,
+        id: 1,
+        coverage: 22.33,
+        codeSmells: 3,
+        hotspot: 4,
       });
 
       const updatedRepo = await service.update(ID, {
-        name: 'Repo 1 updated',
-        state: RepositoryStateEnum.ARCHIVE,
+        coverage: 33.33,
+        codeSmells: 5,
+        hotspot: 1,
       });
+
+      console.log(updatedRepo);
 
       expect(updatedRepo).toMatchObject({
         id: 1,
-        name: 'Repo 1 updated',
-        state: RepositoryStateEnum.ARCHIVE,
-        status: RepositoryStatusEnum.ACTIVE,
+        coverage: 33.33,
+        codeSmells: 5,
+        hotspot: 1,
       });
     });
 
-    it('should throw an internal exception if there is a problem updating a repository', async () => {
-      jest.spyOn(repoRepository, 'save').mockImplementation(() => {
+    it('should throw an internal exception if there is a problem updating a metric', async () => {
+      jest.spyOn(metricsRepository, 'save').mockImplementation(() => {
         throw new Error();
       });
 
@@ -129,31 +133,37 @@ describe('RepositoryService', () => {
       expect(repositories[0]).toMatchObject([
         {
           id: 3,
-          name: 'new repo',
-          state: RepositoryStateEnum.ENABLE,
-          status: RepositoryStatusEnum.ACTIVE,
-          tribeId: 1,
+          coverage: 44.33,
+          bugs: 3,
+          vulnerabilities: 1,
+          hotspot: 1,
+          codeSmells: 2,
+          repositoryId: 1,
         },
         {
           id: 2,
-          name: 'Repository 2',
-          state: RepositoryStateEnum.ARCHIVE,
-          status: RepositoryStatusEnum.ACTIVE,
-          tribeId: 2,
+          coverage: 55.69,
+          bugs: 2,
+          vulnerabilities: 2,
+          hotspot: 9,
+          codeSmells: 2,
+          repositoryId: 2,
         },
         {
           id: 1,
-          name: 'Repo 1 updated',
-          state: RepositoryStateEnum.ARCHIVE,
-          status: RepositoryStatusEnum.ACTIVE,
-          tribeId: 2,
+          coverage: 33.33,
+          bugs: 1,
+          vulnerabilities: 2,
+          hotspot: 1,
+          codeSmells: 5,
+          repositoryId: 1,
         },
       ]);
       expect(repositories[1]).toBe(3);
     });
 
     it('should throw an internal exception if there is a problem', async () => {
-      jest.spyOn(repoRepository, 'findAndCount').mockImplementation(() => {
+      jest.spyOn(metricsRepository, 'findAndCount').mockImplementation(() => {
         throw new Error();
       });
 
@@ -164,23 +174,24 @@ describe('RepositoryService', () => {
   });
 
   describe('when findById method is called', () => {
-    it('should return a repository', async () => {
+    it('should return a metric', async () => {
       const ID = 2;
-      const repository = await service.findById(ID);
+      const metric = await service.findById(ID);
 
-      expect(repository).toMatchObject({
+      expect(metric).toMatchObject({
         id: 2,
-        name: 'Repository 2',
-        state: RepositoryStateEnum.ARCHIVE,
-        status: RepositoryStatusEnum.ACTIVE,
-        tribeId: 2,
+        coverage: 55.69,
+        bugs: 2,
+        vulnerabilities: 2,
+        codeSmells: 2,
+        hotspot: 9,
       });
     });
     it('should return undefined if register not exist', async () => {
-      expect(await service.findById(99)).toBeUndefined();
+      expect(await service.findById(200)).toBeUndefined();
     });
     it('should throw an internal exception if there is a problem', async () => {
-      jest.spyOn(repoRepository, 'findOne').mockImplementation(() => {
+      jest.spyOn(metricsRepository, 'findOne').mockImplementation(() => {
         throw new Error();
       });
 
@@ -191,17 +202,17 @@ describe('RepositoryService', () => {
   });
 
   describe('when delete method is called', () => {
-    it('should delete a repository', async () => {
+    it('should delete a metric', async () => {
       const ID = 1;
 
-      const originalRepo = await repoRepository.findOne(ID);
-      expect(originalRepo).toMatchObject({
+      const originalMetric = await metricsRepository.findOne(ID);
+      expect(originalMetric).toMatchObject({
         id: ID,
       });
 
       await service.delete(ID);
 
-      expect(await repoRepository.findOne(ID)).toBeUndefined();
+      expect(await metricsRepository.findOne(ID)).toBeUndefined();
     });
 
     it('should throw a not found exception if register not exist', async () => {
@@ -209,7 +220,7 @@ describe('RepositoryService', () => {
     });
 
     it('should throw an internal exception if there is a problem deleting a repository', async () => {
-      jest.spyOn(repoRepository, 'delete').mockImplementation(() => {
+      jest.spyOn(metricsRepository, 'delete').mockImplementation(() => {
         throw new Error();
       });
 

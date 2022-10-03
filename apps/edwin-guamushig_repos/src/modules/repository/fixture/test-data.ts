@@ -1,10 +1,10 @@
 import { OrganizationEntity } from '../../organization/entity/organization.entity';
 import { TribeEntity } from '../../tribe/entity/tribe.entity';
+import { RepositoryEntity } from '../entity/repository.entity';
 import {
-  RepositoryEntity,
   RepositoryStateEnum,
   RepositoryStatusEnum,
-} from '../entity/repository.entity';
+} from '../enum/repository.enum';
 
 export const DATA = {
   organization: {

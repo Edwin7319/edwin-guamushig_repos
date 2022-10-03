@@ -8,7 +8,7 @@ import { getRepository, Repository } from 'typeorm';
 import { OrganizationService } from '../organization.service';
 import { TestUtil } from '../../../utils/test.util';
 import { OrganizationController } from '../organization.controller';
-import { DATA } from '../fixtures/test-data';
+import { DATA } from '../fixture/test-data';
 import { OrganizationCreateDto } from '../dto/organization-create.dto';
 import { OrganizationEntity } from '../entity/organization.entity';
 
@@ -94,11 +94,9 @@ describe('OrganizationService', () => {
     });
 
     it('should throw an internal exception if there is a problem updating an organization', async () => {
-      jest
-        .spyOn(organizationRepository, 'createQueryBuilder')
-        .mockImplementation(() => {
-          throw new Error();
-        });
+      jest.spyOn(organizationRepository, 'save').mockImplementation(() => {
+        throw new Error();
+      });
 
       await expect(service.update(1, {})).rejects.toThrow(
         InternalServerErrorException,
