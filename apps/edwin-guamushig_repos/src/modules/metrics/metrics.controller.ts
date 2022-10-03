@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   ParseIntPipe,
   Post,
@@ -12,6 +13,7 @@ import { MetricsEntity } from './entity/metrics.entity';
 import { MetricsCreateDto } from './dto/metrics-create.dto';
 import { MetricsService } from './metrics.service';
 import { MetricsUpdateDto } from './dto/metrics-update.dto';
+import { RepositoryMetricsResponseDto } from './dto/repository-metrics-response.dto';
 
 @Controller('metrics')
 export class MetricsController extends BaseAppController<
@@ -33,5 +35,12 @@ export class MetricsController extends BaseAppController<
     @Param('id', ParseIntPipe) id: number,
   ): Promise<MetricsEntity> {
     return this._metricsService.update(id, data);
+  }
+
+  @Get('tribe/:id')
+  async getRepositoryMetrics(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<RepositoryMetricsResponseDto> {
+    return this._metricsService.getRepositoryMetrics(id);
   }
 }

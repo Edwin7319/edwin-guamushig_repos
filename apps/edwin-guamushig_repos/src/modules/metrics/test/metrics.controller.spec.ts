@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ValidationPipe } from '@nestjs/common';
 import * as request from 'supertest';
+import { ConfigService } from '@nestjs/config';
 
 import { MetricsController } from '../metrics.controller';
 import { TestUtil } from '../../../utils/test.util';
@@ -9,6 +10,7 @@ import { MetricsCreateDto } from '../dto/metrics-create.dto';
 import { DATA } from '../fixture/test-data';
 import { MetricsEntity } from '../entity/metrics.entity';
 import { MetricsUpdateDto } from '../dto/metrics-update.dto';
+import { SimulatedModule } from '../../../gateway/simulated/simulated.module';
 
 describe('MetricsController', () => {
   let controller: MetricsController;
@@ -19,9 +21,9 @@ describe('MetricsController', () => {
   beforeAll(async () => {
     const typeOrmModule = await TestUtil.testingTypeOrmModuleImports();
     module = await Test.createTestingModule({
-      imports: [...typeOrmModule],
-      providers: [MetricsService],
+      imports: [...typeOrmModule, SimulatedModule],
       controllers: [MetricsController],
+      providers: [MetricsService, ConfigService],
       exports: [MetricsService],
     }).compile();
 
