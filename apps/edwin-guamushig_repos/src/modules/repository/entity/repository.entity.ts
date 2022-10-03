@@ -3,24 +3,17 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToOne,
+  OneToMany,
   RelationId,
 } from 'typeorm';
 import { TribeEntity } from '../../tribe/entity/tribe.entity';
 
 import { BaseAppEntity } from '../../../base/base-app.entity';
-import { MetricsEntity } from '../../metrics/metrics.entity';
-
-export enum RepositoryStateEnum {
-  ENABLE = 'E',
-  DISABLE = 'D',
-  ARCHIVE = 'A',
-}
-
-export enum RepositoryStatusEnum {
-  ACTIVE = 'A',
-  INACTIVE = 'I',
-}
+import { MetricsEntity } from '../../metrics/entity/metrics.entity';
+import {
+  RepositoryStateEnum,
+  RepositoryStatusEnum,
+} from '../enum/repository.enum';
 
 @Entity('repository')
 export class RepositoryEntity extends BaseAppEntity {
@@ -52,9 +45,9 @@ export class RepositoryEntity extends BaseAppEntity {
     name: 'create_time',
     type: 'timestamp',
     nullable: false,
-    default: new Date(),
+    default: () => 'CURRENT_TIMESTAMP',
   })
-  createTime: Date;
+  createTime: Date = new Date();
 
   @ManyToOne(() => TribeEntity, (tribe) => tribe.repositories, {
     nullable: false,
@@ -64,6 +57,6 @@ export class RepositoryEntity extends BaseAppEntity {
   @RelationId((repository: RepositoryEntity) => repository.tribe)
   tribeId: number;
 
-  @OneToOne(() => MetricsEntity, (metrics) => metrics.repository)
-  metrics: MetricsEntity;
+  @OneToMany(() => MetricsEntity, (metrics) => metrics.repository)
+  metrics: MetricsEntity[];
 }

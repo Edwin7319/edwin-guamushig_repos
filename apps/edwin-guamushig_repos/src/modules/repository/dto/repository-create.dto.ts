@@ -6,11 +6,11 @@ import {
   IsString,
 } from 'class-validator';
 
+import { TribeEntity } from '../../tribe/entity/tribe.entity';
 import {
   RepositoryStateEnum,
   RepositoryStatusEnum,
-} from '../entity/repository.entity';
-import { TribeEntity } from '../../tribe/entity/tribe.entity';
+} from '../enum/repository.enum';
 
 export class RepositoryCreateDto {
   @IsNotEmpty()

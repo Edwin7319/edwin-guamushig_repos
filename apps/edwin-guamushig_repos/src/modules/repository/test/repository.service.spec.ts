@@ -8,14 +8,14 @@ import {
 import { RepositoryService } from '../repository.service';
 import { RepositoryController } from '../repository.controller';
 import { TestUtil } from '../../../utils/test.util';
-import {
-  RepositoryEntity,
-  RepositoryStateEnum,
-  RepositoryStatusEnum,
-} from '../entity/repository.entity';
+import { RepositoryEntity } from '../entity/repository.entity';
 
 import { RepositoryCreateDto } from '../dto/repository-create.dto';
 import { DATA } from '../fixtures/test-data';
+import {
+  RepositoryStateEnum,
+  RepositoryStatusEnum,
+} from '../enum/repository.enum';
 
 describe('RepositoryService', () => {
   let service: RepositoryService;
