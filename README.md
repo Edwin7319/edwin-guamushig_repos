@@ -17,7 +17,7 @@
 
 
 ### Levantar el proyecto
-* Para levantar el proyecto es necesario las variables de entorno que se encuentran descritas en el archivo `.env.example`.
+* Para levantar el proyecto es necesario las variables de entorno que se encuentran descritas en el archivo `.env.example`. Las variables se encuentran en el siguiente enlace `https://drive.google.com/file/d/1EUhDRCXex6pjW-MAqZJcyVETSDjxaEPp/view?usp=sharing`
 
 
 * Clonar el repositorio
