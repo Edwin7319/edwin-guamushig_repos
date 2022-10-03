@@ -8,6 +8,7 @@
    * CockroachDB
    * pg-mem (para pruebas unitarias)
    * Jest (para pruebas unitarias)
+   * Swagger (para documentación de API)
   
 
 * Para generar el servicio **MOCK** en una app independiente, se utilizó la estrategia de **MONOREPOS**; el servicio simulado se encuentra dentro del directorio `/apps/mock-service`.
