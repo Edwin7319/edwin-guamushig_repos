@@ -1,5 +1,6 @@
 import { DynamicModule } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { getRepository } from 'typeorm';
 import { newDb } from 'pg-mem';
 
 import { ENTITIES } from '../constants/entities';
@@ -44,5 +45,14 @@ export class TestUtil {
       }),
       TypeOrmModule.forFeature([...ENTITIES]),
     ];
+  }
+
+  static async setup(fixtures: unknown): Promise<void> {
+    for (const table of Object.keys(fixtures)) {
+      const entity = fixtures[table].entity;
+      for (const item of fixtures[table].data) {
+        await getRepository(entity).save(item);
+      }
+    }
   }
 }
