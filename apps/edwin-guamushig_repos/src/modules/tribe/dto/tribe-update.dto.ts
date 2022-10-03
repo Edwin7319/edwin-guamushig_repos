@@ -1,4 +1,5 @@
 import { IsInt, IsOptional, IsString } from 'class-validator';
+import { OrganizationEntity } from '../../organization/entity/organization.entity';
 
 export class TribeUpdateDto {
   @IsOptional()
@@ -10,6 +11,5 @@ export class TribeUpdateDto {
   status: number;
 
   @IsOptional()
-  @IsInt()
-  organizationId: number;
+  organization: Partial<OrganizationEntity>;
 }

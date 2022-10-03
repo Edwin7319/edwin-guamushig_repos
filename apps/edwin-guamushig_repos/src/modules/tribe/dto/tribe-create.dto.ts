@@ -1,4 +1,5 @@
 import { IsInt, IsNotEmpty, IsString } from 'class-validator';
+import { OrganizationEntity } from '../../organization/entity/organization.entity';
 
 export class TribeCreateDto {
   @IsNotEmpty()
@@ -10,6 +11,5 @@ export class TribeCreateDto {
   status: number;
 
   @IsNotEmpty()
-  @IsInt()
-  organizationId: number;
+  organization: Partial<OrganizationEntity>;
 }
